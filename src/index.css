@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+/* 🕹️ Custom Pixel Font */
+@font-face {
+  font-family: 'Pixel';
+  src: url('https://fonts.gstatic.com/s/pressstart2p/v14/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2') format('woff2');
+}
+
+/* 🌸 Apply Pixel Font */
+.font-pixel {
+  font-family: 'Pixel', monospace;
+}
+
+/* ✨ Glowing Text Effect */
+.glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* 💖 Love Note Animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-float {
+  animation: float 2s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 4s ease-in-out infinite;
+}
+
+/* 🎀 Smooth Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Add this animation for error messages */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -20px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.operator-btn {
+  @apply bg-gradient-to-br from-orange-400 to-orange-500 
+    hover:from-orange-500 hover:to-orange-600 
+    text-white font-bold shadow-lg;
+}
+
+.number-btn {
+  @apply bg-white/50 hover:bg-white/70 
+    text-gray-800 shadow-md;
+}
