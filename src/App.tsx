@@ -116,50 +116,57 @@ function App() {
   };
 
   // Add this useEffect hook right after your other useEffect hooks
-  useEffect(() => {
-    const handleKeyPress = (event: KeyboardEvent) => {
-      const key = event.key;
+// Update the useEffect hook with the modified handleKeyPress function
+useEffect(() => {
+  const handleKeyPress = (event: KeyboardEvent) => {
+    const key = event.key;
 
-      // Numbers and decimal
-      if (/^[0-9.]$/.test(key)) {
-        handleNumber(key);
-      }
+    // Numbers and decimal
+    if (/^[0-9.]$/.test(key)) {
+      handleNumber(key);
+    }
 
-      // Operators
-      const operatorMap: Record<string, string> = {
-        '+': '+',
-        '-': '-',
-        '*': '*',
-        '/': '/',
-        'x': '*',
-        'X': '*',
-      };
+    // Operators
+    const operatorMap: Record<string, string> = {
+      '+': '+',
+      '-': '-',
+      '*': '*',
+      '/': '/',
+      'x': '*',
+      'X': '*',
+    };
 
-      if (key in operatorMap) {
-        handleOperator(operatorMap[key]);
-      }
+    if (key in operatorMap) {
+      handleOperator(operatorMap[key]);
+    }
 
-      // Enter/Equal for calculation
-      if (key === 'Enter' || key === '=') {
+    // Enter/Equal for calculation
+    if (key === 'Enter' || key === '=') {
+      event.preventDefault(); // Prevent form submission if within a form
+      if (equation.trim()) { // Only calculate if there's an equation
         handleCalculate();
       }
+    }
 
-      else if (key === 'Backspace') {
-        handleBackspace();
-      }
+    // Backspace for single character deletion
+    else if (key === 'Backspace') {
+      event.preventDefault();
+      handleBackspace();
+    }
 
-      // Backspace/Delete/Escape for clear
-      if (['Backspace', 'Delete', 'Escape'].includes(key)) {
-        handleClear();
-      }
-    };
+    // Clear with Delete or Escape
+    else if (key === 'Delete' || key === 'Escape') {
+      event.preventDefault();
+      handleClear();
+    }
+  };
 
-    window.addEventListener('keydown', handleKeyPress);
+  window.addEventListener('keydown', handleKeyPress);
 
-    return () => {
-      window.removeEventListener('keydown', handleKeyPress);
-    };
-  }, []);
+  return () => {
+    window.removeEventListener('keydown', handleKeyPress);
+  };
+}, [equation]); // Add equation to dependencies
 
 
   const handleScientific = (operation: string) => {
