@@ -1,6 +1,6 @@
-# 🌸 Kawaii Calculator ✨
+# 🌸 Kawaiii Calculator ✨
 
-Hey there! Welcome to my super cute calculator project! It's not your average boring calculator - this one comes with some fun surprises and magical themes! 
+Hey there! Welcome to my super cute calculator project! (I was just bored) It's not your average boring calculator - this one comes with some fun surprises and magical themes! and umm... ye thats it :)
 
 ## ✨ Features That Make It Special
 
@@ -28,7 +28,7 @@ Hey there! Welcome to my super cute calculator project! It's not your average bo
 
 ## 🌈 Live Demo
 
-Check it out here: [Kawaii Calculator](your-demo-link)
+Check it out here: [Kawaiii Calculator](https://kawaiiicalculator.netlify.app/)
 
 ## 🎨 Themes Preview
 
