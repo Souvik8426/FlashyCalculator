@@ -82,3 +82,47 @@
   @apply bg-white/50 hover:bg-white/70 
     text-gray-800 shadow-md;
 }
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #FFB6C1, #DDA0DD);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #FF69B4, #BA55D3);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #FFB6C1 transparent;
+}
+
+/* For Dark Mode */
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #9370DB, #483D8B);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #8A2BE2, #4B0082);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+

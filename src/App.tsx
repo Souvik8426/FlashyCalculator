@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Moon, Sun, Heart, UserRound as Rose, Sparkles, History, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Moon, Sun, Heart, UserRound as Rose, History, X } from 'lucide-react';
 
 function App() {
   const [darkMode, setDarkMode] = useState(() =>
@@ -10,10 +10,9 @@ function App() {
   const [equation, setEquation] = useState('');
   const [history, setHistory] = useState<string[]>([]);
   const [showHistory, setShowHistory] = useState(false);
-  const [secretCode, setSecretCode] = useState('');
-  const [showLoveNote, setShowLoveNote] = useState(false);
-  const [animation, setAnimation] = useState('');
+  const [showLoveNote, setShowLoveNote] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [animation, setAnimation] = useState('');
   const [isScientificMode, setIsScientificMode] = useState(false);
 
   useEffect(() => {
@@ -22,21 +21,6 @@ function App() {
       setHistory(JSON.parse(savedHistory));
     }
   }, []);
-
-  useEffect(() => {
-    if (secretCode === '1314') {
-      setLoveMode(true);
-      setShowLoveNote(true);
-      setAnimation('animate-heartbeat');
-      setTimeout(() => {
-        setShowLoveNote(false);
-        setAnimation('');
-      }, 3000);
-    }
-    if (secretCode.length >= 4) {
-      setSecretCode('');
-    }
-  }, [secretCode]);
 
   const playSound = (type: 'button' | 'calculate' | 'clear') => {
     const frequencies: Record<string, number> = {
@@ -62,7 +46,6 @@ function App() {
 
   const handleNumber = (num: string) => {
     playSound('button');
-    setSecretCode(prev => prev + num);
     setDisplay(prev => (prev === '0' ? num : prev + num));
     setEquation(prev => prev + num);
   };
@@ -77,9 +60,13 @@ function App() {
     playSound('clear');
     setDisplay('0');
     setEquation('');
-    setLoveMode(false);
   };
 
+  const handleError = (err: unknown) => {
+    const errorMessage = err instanceof Error ? err.message : 'Calculation Error';
+    setError(errorMessage);
+    setTimeout(() => setError(null), 3000);
+  };
   // Modify handleCalculate with better error handling
   const handleCalculate = () => {
     playSound('calculate');
@@ -87,8 +74,17 @@ function App() {
       if (!equation.trim()) {
         throw new Error('Empty expression');
       }
+      // Check for 1+1 and trigger love note
+      if (equation.trim() === '1 + 1') {
+        setLoveMode(true);
+        setShowLoveNote(true);
+        setAnimation('animate-heartbeat');
+        setTimeout(() => {
+          setShowLoveNote(false);
+          setAnimation('');
+        }, 3000);
+      }
 
-      // Validate division by zero
       if (equation.includes('/0')) {
         throw new Error('Division by zero');
       }
@@ -108,8 +104,7 @@ function App() {
       setEquation(formattedResult);
       setHistory(prev => [`${equation} = ${formattedResult}${loveMode ? ' 💝' : ''}`, ...prev].slice(0, 10));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Invalid Expression');
-      setTimeout(() => setError(null), 3000);
+      handleError(err);
       setDisplay('0');
       setEquation('');
     }
@@ -194,8 +189,7 @@ function App() {
       setEquation(`${operation}(${currentValue}) = ${formattedResult}`);
       setHistory(prev => [`${operation}(${currentValue}) = ${formattedResult}`, ...prev].slice(0, 10));
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Calculation Error');
-      setTimeout(() => setError(null), 3000);
+      handleError(err);
     }
   };
 
@@ -210,11 +204,22 @@ function App() {
 
   return (
     <div className={`min-h-screen w-full transition-colors duration-300 ${darkMode
-      ? 'bg-gradient-to-br from-[#2C1B3D] to-[#422B5F]'
+      ? loveMode 
+        ? 'bg-gradient-to-br from-[#4A1942] via-[#893168] to-[#C74B80]' // Dark love mode - deeper rose/burgundy
+        : 'bg-gradient-to-br from-[#1A1A2E] via-[#16213E] to-[#0F3460]' // Dark mode
       : loveMode
-        ? 'bg-gradient-to-br from-[#FF69B4] to-[#FFB6C1]'
-        : 'bg-gradient-to-br from-[#FCC6FF] to-[#FFA09B]'
+        ? 'bg-gradient-to-br from-[#FF69B4] to-[#FFB6C1]' // Light love mode
+        : 'bg-gradient-to-br from-[#FCC6FF] to-[#FFA09B]' // Light mode
       }`}>
+      {showLoveNote && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-pink-100/90 backdrop-blur-sm p-6 rounded-3xl shadow-2xl animate-float text-center">
+            <p className="text-xl text-pink-600 font-pixel">Love Mode Activated! 💝</p>
+            <p className="text-sm text-pink-500 mt-2">Everything is better with love ✨</p>
+          </div>
+        </div>
+      )}
+
       <div className="container mx-auto px-4 py-8 min-h-screen flex flex-col items-center justify-center">
         {/* Main Calculator Container */}
         <div className="w-full max-w-md relative">
@@ -262,7 +267,7 @@ function App() {
           {showHistory && (
             <div className={`absolute right-0 top-20 w-64 p-4 rounded-xl shadow-xl z-50 backdrop-blur-md
               ${darkMode
-                ? 'bg-[#2C1B3D]/90 text-purple-300'
+                ? 'bg-[#2A2D3E]/90 text-blue-300'
                 : 'bg-white/90 text-purple-600'}`}>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg font-bold">History</h3>
@@ -273,7 +278,7 @@ function App() {
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {history.map((item, index) => (
                   <div key={index} className={`p-2 rounded-lg ${darkMode
-                    ? 'bg-purple-900/30'
+                    ? 'bg-blue-900/30'
                     : 'bg-purple-100/50'
                     }`}>
                     {item}
@@ -286,12 +291,14 @@ function App() {
           {/* Calculator Body */}
           <div className={`rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md 
   ${darkMode && loveMode
-              ? 'bg-gradient-to-br from-[#2C1B3D]/90 to-[#422B5F]/90' // Female dark theme
-              : darkMode
-                ? 'bg-gradient-to-br from-[#1A1A1A]/90 to-[#2C2C2C]/90' // Male dark theme
-                : loveMode
-                  ? 'bg-gradient-to-br from-pink-100/90 to-purple-100/90'
-                  : 'bg-white/90'}`}>
+    ? 'bg-gradient-to-br from-[#2D1429]/90 via-[#461B3D]/90 to-[#6B2B5B]/90' // Dark love mode - rich burgundy
+    : darkMode
+      ? 'bg-gradient-to-br from-[#0A1931]/80 via-[#150F3F]/80 to-[#311D3F]/80' // Dark mode
+      : loveMode
+        ? 'bg-gradient-to-br from-[#FFE6F3]/90 via-[#FFE6FF]/90 to-[#F8E6FF]/90' // Light love mode
+        : 'bg-gradient-to-br from-[#FFFFFF]/90 via-[#FFF5FA]/90 to-[#FFF0F7]/90'}`} // Pure light theme
+          >
+
 
             {/* Calculator Display */}
             <div className={`p-6 ${darkMode ? 'bg-[#2C1B3D]/50' : 'bg-white/30'}`}>
@@ -364,23 +371,29 @@ function App() {
               </div>
             </div>
           </div>
+          {error && (
+            <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-red-500 text-white 
+    px-6 py-3 rounded-full text-sm animate-fade-in shadow-lg z-50">
+              {error}
+            </div>
+          )}
           <div className="fixed bottom-4 left-0 right-0 text-center backdrop-blur-sm">
-                <a
-                  href="https://github.com/yourusername"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`text-sm font-medium transition-all hover:scale-105 ${darkMode && loveMode
-                      ? 'text-purple-300 hover:text-purple-200'
-                      : darkMode
-                        ? 'text-gray-300 hover:text-white'
-                        : loveMode
-                          ? 'text-pink-600 hover:text-pink-700'
-                          : 'text-gray-600 hover:text-gray-800'
-                    }`}
-                >
-                  Made with {loveMode ? '💖' : '💻'} by @Souvik8426
-                </a>
-              </div>
+            <a
+              href="https://github.com/yourusername"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-sm font-medium transition-all hover:scale-105 ${darkMode && loveMode
+                ? 'text-purple-300 hover:text-purple-200'
+                : darkMode
+                  ? 'text-gray-300 hover:text-white'
+                  : loveMode
+                    ? 'text-pink-600 hover:text-pink-700'
+                    : 'text-gray-600 hover:text-gray-800'
+                }`}
+            >
+              Made with {loveMode ? '💖' : '💻'} by @Souvik8426
+            </a>
+          </div>
         </div>
       </div>
     </div>
