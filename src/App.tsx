@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Heart, UserRound as Rose, History, X } from 'lucide-react';
+import { Moon, Sun, Heart, UserRound as Rose, History, X, Backpack as Backspace } from 'lucide-react';
 
 function App() {
   const [darkMode, setDarkMode] = useState(() =>
@@ -62,6 +62,11 @@ function App() {
     setEquation('');
   };
 
+  const handleBackspace = () => {
+    setDisplay(prev => prev.slice(0, -1) || '0');
+  };
+  
+
   const handleError = (err: unknown) => {
     const errorMessage = err instanceof Error ? err.message : 'Calculation Error';
     setError(errorMessage);
@@ -82,7 +87,7 @@ function App() {
         setTimeout(() => {
           setShowLoveNote(false);
           setAnimation('');
-        }, 3000);
+        }, 5000);
       }
 
       if (equation.includes('/0')) {
@@ -137,6 +142,10 @@ function App() {
       // Enter/Equal for calculation
       if (key === 'Enter' || key === '=') {
         handleCalculate();
+      }
+
+      else if (key === 'Backspace') {
+        handleBackspace();
       }
 
       // Backspace/Delete/Escape for clear
@@ -204,7 +213,7 @@ function App() {
 
   return (
     <div className={`min-h-screen w-full transition-colors duration-300 ${darkMode
-      ? loveMode 
+      ? loveMode
         ? 'bg-gradient-to-br from-[#4A1942] via-[#893168] to-[#C74B80]' // Dark love mode - deeper rose/burgundy
         : 'bg-gradient-to-br from-[#1A1A2E] via-[#16213E] to-[#0F3460]' // Dark mode
       : loveMode
@@ -214,8 +223,8 @@ function App() {
       {showLoveNote && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-pink-100/90 backdrop-blur-sm p-6 rounded-3xl shadow-2xl animate-float text-center">
-            <p className="text-xl text-pink-600 font-pixel">Love Mode Activated! 💝</p>
-            <p className="text-sm text-pink-500 mt-2">Everything is better with love ✨</p>
+            <p className="text-xl text-pink-600 font-pixel">Found the hidder Easter! 💝</p>
+            <p className="text-sm text-pink-500 mt-2">So 1+1 is 2 if protection not used 🌚</p>
           </div>
         </div>
       )}
@@ -291,12 +300,12 @@ function App() {
           {/* Calculator Body */}
           <div className={`rounded-3xl overflow-hidden shadow-2xl backdrop-blur-md 
   ${darkMode && loveMode
-    ? 'bg-gradient-to-br from-[#2D1429]/90 via-[#461B3D]/90 to-[#6B2B5B]/90' // Dark love mode - rich burgundy
-    : darkMode
-      ? 'bg-gradient-to-br from-[#0A1931]/80 via-[#150F3F]/80 to-[#311D3F]/80' // Dark mode
-      : loveMode
-        ? 'bg-gradient-to-br from-[#FFE6F3]/90 via-[#FFE6FF]/90 to-[#F8E6FF]/90' // Light love mode
-        : 'bg-gradient-to-br from-[#FFFFFF]/90 via-[#FFF5FA]/90 to-[#FFF0F7]/90'}`} // Pure light theme
+              ? 'bg-gradient-to-br from-[#2D1429]/90 via-[#461B3D]/90 to-[#6B2B5B]/90' // Dark love mode - rich burgundy
+              : darkMode
+                ? 'bg-gradient-to-br from-[#0A1931]/80 via-[#150F3F]/80 to-[#311D3F]/80' // Dark mode
+                : loveMode
+                  ? 'bg-gradient-to-br from-[#FFE6F3]/90 via-[#FFE6FF]/90 to-[#F8E6FF]/90' // Light love mode
+                  : 'bg-gradient-to-br from-[#FFFFFF]/90 via-[#FFF5FA]/90 to-[#FFF0F7]/90'}`} // Pure light theme
           >
 
 
@@ -336,20 +345,21 @@ function App() {
             {/* Number Pad */}
             <div className="p-6 pt-3 grid gap-3">
               <div className="grid grid-cols-4 gap-3">
-                {['C', '%', '÷', '×', '7', '8', '9', '-', '4', '5', '6', '+', '1', '2', '3', '=', '0', '.'].map((btn) => (
+                {['C', '%', '÷', '×', '7', '8', '9', '-', '4', '5', '6', '+', '1', '2', '3', 'backspace', '=', '0', '.'].map((btn) => (
                   <button
                     key={btn}
                     onClick={() => {
                       if (btn === 'C') handleClear();
                       else if (btn === '=') handleCalculate();
+                      else if (btn === 'backspace') handleBackspace();
                       else if (['+', '-', '×', '÷', '%'].includes(btn))
                         handleOperator(btn.replace('×', '*').replace('÷', '/'));
                       else handleNumber(btn);
                     }}
                     className={`${btn === '=' ? 'col-span-2' : ''} 
-                      py-4 rounded-2xl text-xl font-pixel transition-all 
-                      hover:scale-105 active:scale-95 shadow-inner
-                      ${['C', '+', '-', '×', '÷', '=', '%'].includes(btn)
+          py-4 rounded-2xl text-xl font-pixel transition-all 
+          hover:scale-105 active:scale-95 shadow-inner
+          ${['C', '+', '-', '×', '÷', '=', '%', 'backspace'].includes(btn)
                         ? darkMode && loveMode
                           ? 'bg-purple-900/50 hover:bg-purple-800/50 text-purple-200'
                           : darkMode
@@ -365,7 +375,8 @@ function App() {
                               ? 'bg-white/50 hover:bg-white/70 text-purple-700'
                               : 'bg-white/50 hover:bg-white/70 text-gray-800'}`}
                   >
-                    {btn === '=' ? <Heart className="mx-auto w-6 h-6" /> : btn}
+                    {btn === '=' ? <Heart className="mx-auto w-6 h-6" /> :
+                      btn === 'backspace' ? <Backspace className="mx-auto w-6 h-6" /> : btn}
                   </button>
                 ))}
               </div>
