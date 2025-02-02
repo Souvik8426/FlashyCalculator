@@ -231,7 +231,7 @@ useEffect(() => {
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="bg-pink-100/90 backdrop-blur-sm p-6 rounded-3xl shadow-2xl animate-float text-center">
             <p className="text-xl text-pink-600 font-pixel">Found the hidden Easter! 💝</p>
-            <p className="text-sm text-pink-500 mt-2">So 1+1 is 2 if protection not used 🌚</p>
+            <p className="text-sm text-pink-500 mt-2">Mathematics is simple: 1 + 1 remains 2… unless precautions are forgotten, then surprises come through. 🌚</p>
           </div>
         </div>
       )}
